@@ -1,0 +1,190 @@
+==================================================
+               EXAM ON ARRAYS (DIFFICULTY: MEDIUM)
+               Total Marks: 50
+==================================================
+
+--------------------------------------------------
+ SECTION: THEORY/CONCEPT
+--------------------------------------------------
+
+Q1. Which of the following statements about arrays is FALSE? (4 Marks)
+   [A] A) Elements in an array are stored in contiguous memory locations.
+   [B] B) An array can store elements of different data types.
+   [C] C) Arrays have a fixed size once declared.
+   [D] D) Elements in an array can be accessed using an index.
+
+Answer Key: B
+
+Q2. Briefly explain two advantages and two disadvantages of using arrays in programming. (5 Marks)
+
+Answer Key: Advantages: Efficient random access (O(1)) to elements using an index; elements are stored contiguously, which can lead to better cache performance. Disadvantages: Fixed size (cannot dynamically grow or shrink easily); insertion or deletion of elements in the middle can be costly (O(n)) due to the need to shift other elements.
+
+Q3. Consider an array declared as `int arr[10];` in C. What is the valid range of indices to access elements in this array? (6 Marks)
+   [A] A) 0 to 9
+   [B] B) 1 to 10
+   [C] C) 0 to 10
+   [D] D) 1 to 9
+
+Answer Key: A
+
+Q4. In what scenarios would an array be a more suitable data structure compared to a linked list, and vice-versa? Provide one scenario for each. (6 Marks)
+
+Answer Key: Array is more suitable when: The size of the collection is known and fixed beforehand, and frequent random access to elements by index is a primary requirement (e.g., storing a grid or matrix). Linked list is more suitable when: The size of the collection is dynamic and unknown, and frequent insertions or deletions are required at arbitrary positions without costly shifting of elements (e.g., implementing a queue or a list where elements are often added/removed from the middle).
+
+
+--------------------------------------------------
+ SECTION: PROGRAMMING/CODING
+--------------------------------------------------
+
+Q5. Write a Python function `find_second_largest(arr)` that takes a list of integers `arr` and returns the second largest unique element. Assume `arr` contains at least two distinct elements. (4 Marks)
+
+Starter Code:
+```
+def find_second_largest(arr):
+```
+
+Solution:
+def find_second_largest(arr):
+  unique_arr = sorted(list(set(arr)))
+  if len(unique_arr) < 2:
+    # Handle edge case if problem constraints change, though stated 'at least two distinct'
+    return None 
+  return unique_arr[-2]
+
+Q6. Write a Python function `rotate_array(arr, k)` that takes a list of integers `arr` and an integer `k` (number of positions to rotate). The function should rotate the array to the right by `k` steps in-place and return the modified array. `k` can be larger than the length of `arr`. (4 Marks)
+
+Starter Code:
+```
+def rotate_array(arr, k):
+```
+
+Solution:
+def rotate_array(arr, k):
+  n = len(arr)
+  if n == 0:
+    return arr
+  k %= n # Handle k larger than array length
+  
+  if k == 0:
+    return arr
+
+  # In-place rotation using reversals
+  def reverse(sub_arr, start, end):
+    while start < end:
+      sub_arr[start], sub_arr[end] = sub_arr[end], sub_arr[start]
+      start += 1
+      end -= 1
+  
+  reverse(arr, 0, n - 1)   # Reverse the entire array
+  reverse(arr, 0, k - 1)   # Reverse the first k elements
+  reverse(arr, k, n - 1)   # Reverse the remaining n-k elements
+  
+  return arr
+
+Q7. Write a Python function `remove_duplicates(nums)` that takes a sorted list of integers `nums` and removes duplicates in-place such that each unique element appears only once. The function should return the new length of the array. Do not allocate extra space for another array. (4 Marks)
+
+Starter Code:
+```
+def remove_duplicates(nums):
+```
+
+Solution:
+def remove_duplicates(nums):
+  if not nums:
+    return 0
+  
+  i = 0 # Pointer for the position of the next unique element
+  for j in range(1, len(nums)): # Pointer for iterating through the array
+    if nums[j] != nums[i]:
+      i += 1
+      nums[i] = nums[j]
+  
+  # The new length of the array with unique elements is i + 1
+  return i + 1
+
+Q8. Write a Python function `merge_sorted_arrays(arr1, arr2)` that takes two sorted lists of integers, `arr1` and `arr2`, and merges them into a single sorted list. The function should return the new merged sorted list. (5 Marks)
+
+Starter Code:
+```
+def merge_sorted_arrays(arr1, arr2):
+```
+
+Solution:
+def merge_sorted_arrays(arr1, arr2):
+  merged_list = []
+  i, j = 0, 0
+  
+  # Iterate through both arrays, comparing elements and appending the smaller one
+  while i < len(arr1) and j < len(arr2):
+    if arr1[i] < arr2[j]:
+      merged_list.append(arr1[i])
+      i += 1
+    else:
+      merged_list.append(arr2[j])
+      j += 1
+  
+  # Append any remaining elements from arr1
+  while i < len(arr1):
+    merged_list.append(arr1[i])
+    i += 1
+      
+  # Append any remaining elements from arr2
+  while j < len(arr2):
+    merged_list.append(arr2[j])
+    j += 1
+          
+  return merged_list
+
+
+--------------------------------------------------
+ SECTION: MATHEMATICS/NUMERICAL
+--------------------------------------------------
+
+Q9. Consider an array $A$ containing $N-1$ distinct numerical elements, where these elements are taken from the sequence of natural numbers $1, 2, \dots, N$. All elements are present exactly once except for one missing number. If $N=7$ and the array $A = [1, 3, 4, 6, 7, 2]$, determine the missing number. (4 Marks)
+
+Solution:
+1. The sum of natural numbers from $1$ to $N$ can be calculated using the formula $S_N = \frac{N(N+1)}{2}$.
+2. For $N=7$, the expected sum is $S_7 = \frac{7(7+1)}{2} = \frac{7 \times 8}{2} = \frac{56}{2} = 28$.
+3. Calculate the sum of the elements present in the given array $A$: $1 + 3 + 4 + 6 + 7 + 2 = 23$.
+4. The missing number is the difference between the expected sum and the actual sum of array elements: Missing Number $= S_N - \text{Sum}(A)$.
+5. Missing Number $= 28 - 23 = 5$.
+
+Q10. Given a numerical array $B = [-2, 1, -3, 4, -1, 2, 1, -5, 4]$, find the maximum sum of a contiguous subarray within $B$. A contiguous subarray must contain at least one number. (5 Marks)
+
+Solution:
+This problem can be solved using Kadane's algorithm.
+1. Initialize `max_so_far` (the maximum sum found globally) to the first element of the array, and `current_max` (the maximum sum ending at the current position) also to the first element.
+2. For the given array $B = [-2, 1, -3, 4, -1, 2, 1, -5, 4]$:
+   * `max_so_far = -2`
+   * `current_max = -2`
+3. Iterate through the array starting from the second element:
+   * **Element 1**: `current_max = max(1, -2 + 1) = max(1, -1) = 1`. `max_so_far = max(-2, 1) = 1`.
+   * **Element -3**: `current_max = max(-3, 1 + -3) = max(-3, -2) = -2`. `max_so_far = max(1, -2) = 1`.
+   * **Element 4**: `current_max = max(4, -2 + 4) = max(4, 2) = 4`. `max_so_far = max(1, 4) = 4`.
+   * **Element -1**: `current_max = max(-1, 4 + -1) = max(-1, 3) = 3`. `max_so_far = max(4, 3) = 4`.
+   * **Element 2**: `current_max = max(2, 3 + 2) = max(2, 5) = 5`. `max_so_far = max(4, 5) = 5`.
+   * **Element 1**: `current_max = max(1, 5 + 1) = max(1, 6) = 6`. `max_so_far = max(5, 6) = 6`.
+   * **Element -5**: `current_max = max(-5, 6 + -5) = max(-5, 1) = 1`. `max_so_far = max(6, 1) = 6`.
+   * **Element 4**: `current_max = max(4, 1 + 4) = max(4, 5) = 5`. `max_so_far = max(6, 5) = 6`.
+4. The maximum sum of a contiguous subarray is `max_so_far`.
+
+Q11. Given two sorted numerical arrays, $A = [1, 3, 5]$ and $B = [2, 4, 6]$. If these two arrays are merged into a single sorted array $C$, what is the median of $C$? (3 Marks)
+
+Solution:
+1. First, conceptually merge the two sorted arrays $A$ and $B$ into a single sorted array $C$.
+   $A = [1, 3, 5]$
+   $B = [2, 4, 6]$
+   Merging yields $C = [1, 2, 3, 4, 5, 6]$.
+2. Determine the total number of elements in the merged array $C$.
+   Number of elements in $A$ is $N=3$.
+   Number of elements in $B$ is $M=3$.
+   Total elements in $C$ is $N+M = 3+3=6$.
+3. Since the total number of elements (6) is an even number, the median is the average of the two middle elements.
+4. The positions of the middle elements are $\frac{\text{Total elements}}{2}$ and $\frac{\text{Total elements}}{2} + 1$.
+   For 6 elements, these are the $3^{rd}$ and $4^{th}$ elements.
+5. From $C = [1, 2, 3, 4, 5, 6]$:
+   The $3^{rd}$ element is $3$.
+   The $4^{th}$ element is $4$.
+6. The median is the average of these two elements: $\frac{3+4}{2} = \frac{7}{2} = 3.5$.
+
+

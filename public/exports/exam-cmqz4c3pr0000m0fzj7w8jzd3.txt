@@ -1,0 +1,214 @@
+==================================================
+               EXAM ON ARRAYS (DIFFICULTY: MEDIUM)
+               Total Marks: 50
+==================================================
+
+--------------------------------------------------
+ SECTION: THEORY/CONCEPT
+--------------------------------------------------
+
+Q1. Which of the following statements about arrays is FALSE in the context of most statically-typed programming languages? (4 Marks)
+   [A] A) All elements in an array must be of the same data type.
+   [B] B) Arrays typically store elements in contiguous memory locations.
+   [C] C) The size of an array can be easily changed at runtime without creating a new array.
+   [D] D) Elements of an array are accessed using an index, usually starting from zero.
+
+Answer Key: C
+
+Q2. What is the time complexity for accessing an arbitrary element in a one-dimensional array given its index, and why? (5 Marks)
+
+Answer Key: The time complexity for accessing an arbitrary element in a one-dimensional array by its index is O(1) (constant time). This is because arrays store elements in contiguous memory locations. Knowing the base address of the array, the size of each element, and the index, the memory address of any element can be calculated directly using a simple arithmetic formula (Base Address + (Index * Element Size)). This direct calculation eliminates the need to traverse elements, resulting in constant-time access.
+
+Q3. Consider a scenario where you need to store a collection of 100 integers. Briefly explain two advantages of using an array for this task compared to a dynamic data structure like a linked list, and one disadvantage. (6 Marks)
+
+Answer Key: Advantages: 1. Efficient Random Access: Arrays provide O(1) (constant time) access to any element by its index, which is faster than linked lists that require O(N) traversal for random access. 2. Memory Locality/Cache Performance: Due to contiguous memory storage, arrays often exhibit better cache performance, as elements are physically close together, reducing memory access times. Disadvantage: Fixed Size: Arrays have a fixed size determined at declaration. If more than 100 integers need to be stored, a new, larger array must be created, and all existing elements copied over, which can be an expensive operation.
+
+Q4. Which of the following is the primary reason why arrays are often preferred over linked lists when the number of elements is known in advance and frequent random access is required? (6 Marks)
+   [A] A) Arrays consume less memory overall for the same number of elements.
+   [B] B) Arrays provide better data security features than linked lists.
+   [C] C) Arrays offer constant-time (O(1)) access to elements by index, unlike linked lists which require traversal.
+   [D] D) Arrays are easier to implement and debug in all programming languages.
+
+Answer Key: C
+
+
+--------------------------------------------------
+ SECTION: PROGRAMMING/CODING
+--------------------------------------------------
+
+Q5. Write a function `rotate_array(nums, k)` that rotates an array `nums` to the right by `k` steps. The rotation should be done in-place. You can assume `k` is non-negative. (4 Marks)
+
+Starter Code:
+```
+def rotate_array(nums, k):
+```
+
+Solution:
+def rotate_array(nums, k):
+    n = len(nums)
+    k %= n  # Handle cases where k is greater than n
+    # Reverse the entire array
+    nums.reverse()
+    # Reverse the first k elements
+    nums[:k] = nums[:k][::-1]
+    # Reverse the remaining n-k elements
+    nums[k:] = nums[k:][::-1]
+
+Q6. Write a function `find_duplicates(nums)` that takes an array of integers `nums` where each element is between 1 and `n` (inclusive, where `n` is the length of the array), and some elements appear twice while others appear once. Find all the elements that appear twice. You must write an algorithm that runs in O(n) time and uses only constant extra space. (5 Marks)
+
+Starter Code:
+```
+def find_duplicates(nums):
+```
+
+Solution:
+def find_duplicates(nums):
+    duplicates = []
+    for num in nums:
+        idx = abs(num) - 1
+        if nums[idx] < 0:
+            duplicates.append(abs(num))
+        else:
+            nums[idx] *= -1
+    return duplicates
+
+Q7. Write a function `merge_sorted_arrays(arr1, arr2)` that merges two sorted integer arrays, `arr1` and `arr2`, into a single sorted array. Do not use Python's built-in `sort()` method on the final merged array. Your solution should have a time complexity of O(m+n) where m and n are the lengths of `arr1` and `arr2` respectively. (4 Marks)
+
+Starter Code:
+```
+def merge_sorted_arrays(arr1, arr2):
+```
+
+Solution:
+def merge_sorted_arrays(arr1, arr2):
+    merged_arr = []
+    i, j = 0, 0
+    while i < len(arr1) and j < len(arr2):
+        if arr1[i] < arr2[j]:
+            merged_arr.append(arr1[i])
+            i += 1
+        else:
+            merged_arr.append(arr2[j])
+            j += 1
+    # Append remaining elements
+    while i < len(arr1):
+        merged_arr.append(arr1[i])
+        i += 1
+    while j < len(arr2):
+        merged_arr.append(arr2[j])
+        j += 1
+    return merged_arr
+
+Q8. Write a function `two_sum(nums, target)` that takes an array of integers `nums` and an integer `target`. Return indices of the two numbers such that they add up to `target`. Assume that each input would have exactly one solution, and you may not use the same element twice. The order of the returned indices does not matter. (4 Marks)
+
+Starter Code:
+```
+def two_sum(nums, target):
+```
+
+Solution:
+def two_sum(nums, target):
+    num_map = {} # val -> index
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in num_map:
+            return [num_map[complement], i]
+        num_map[num] = i
+    return [] # Should not be reached given problem constraints (exactly one solution)
+
+
+--------------------------------------------------
+ SECTION: MATHEMATICS/NUMERICAL
+--------------------------------------------------
+
+Q9. An array $A$ contains $N-1$ distinct integers in the range $[1, N]$. One number from this range is missing. Given $N=7$ and the array $A = [1, 2, 4, 6, 7, 5]$, find the missing number. Show your calculations using the sum formula. (4 Marks)
+
+Solution:
+Step 1: Determine the value of $N$. From the problem description, $N=7$.
+Step 2: Calculate the expected sum of all numbers from $1$ to $N$ using the formula $S_{expected} = \frac{N(N+1)}{2}$.
+For $N=7$, $S_{expected} = \frac{7(7+1)}{2} = \frac{7 \times 8}{2} = \frac{56}{2} = 28$.
+Step 3: Calculate the actual sum of the numbers present in the array $A$.
+The array $A = [1, 2, 4, 6, 7, 5]$.
+$S_{actual} = 1 + 2 + 4 + 6 + 7 + 5 = 25$.
+Step 4: The missing number is the difference between the expected sum and the actual sum.
+Missing Number $= S_{expected} - S_{actual} = 28 - 25 = 3$.
+
+Q10. Given an integer array $A = [1, 5, 7, -1, 5, 8]$ and a target sum $K=6$, find the number of unique pairs $(A[i], A[j])$ such that $i < j$ and $A[i] + A[j] = K$. Provide a step-by-step method to count these pairs. (4 Marks)
+
+Solution:
+Step 1: Initialize a counter for pairs, `count = 0`.
+Step 2: Iterate through the array with a nested loop, checking each pair $(A[i], A[j])$ where $i < j$.
+
+For $i=0, A[0]=1$:
+  For $j=1, A[1]=5$: $1+5=6$. This is a pair. `count` becomes $1$.
+  For $j=2, A[2]=7$: $1+7=8 \neq 6$.
+  For $j=3, A[3]=-1$: $1+(-1)=0 \neq 6$.
+  For $j=4, A[4]=5$: $1+5=6$. This is a pair. `count` becomes $2$.
+  For $j=5, A[5]=8$: $1+8=9 \neq 6$.
+
+For $i=1, A[1]=5$:
+  For $j=2, A[2]=7$: $5+7=12 \neq 6$.
+  For $j=3, A[3]=-1$: $5+(-1)=4 \neq 6$.
+  For $j=4, A[4]=5$: $5+5=10 \neq 6$.
+  For $j=5, A[5]=8$: $5+8=13 \neq 6$.
+
+For $i=2, A[2]=7$:
+  For $j=3, A[3]=-1$: $7+(-1)=6$. This is a pair. `count` becomes $3$.
+  For $j=4, A[4]=5$: $7+5=12 \neq 6$.
+  For $j=5, A[5]=8$: $7+8=15 \neq 6$.
+
+For $i=3, A[3]=-1$:
+  For $j=4, A[4]=5$: $-1+5=4 \neq 6$.
+  For $j=5, A[5]=8$: $-1+8=7 \neq 6$.
+
+For $i=4, A[4]=5$:
+  For $j=5, A[5]=8$: $5+8=13 \neq 6$.
+
+Step 3: The final count of pairs is $3$.
+
+Q11. Calculate the maximum sum of a contiguous subarray in the given integer array $A = [-2, 1, -3, 4, -1, 2, 1, -5, 4]$. Use Kadane's algorithm and show the step-by-step evolution of `max_so_far` and `current_max` variables. (4 Marks)
+
+Solution:
+Step 1: Initialize `max_so_far` and `current_max` with the first element of the array.
+Given $A = [-2, 1, -3, 4, -1, 2, 1, -5, 4]$.
+`max_so_far = A[0] = -2`
+`current_max = A[0] = -2`
+
+Step 2: Iterate through the array starting from the second element ($i=1$) and update `current_max` and `max_so_far`.
+
+For $i=1, A[1]=1$:
+  `current_max = max(A[1], current_max + A[1]) = max(1, -2 + 1) = max(1, -1) = 1`
+  `max_so_far = max(max_so_far, current_max) = max(-2, 1) = 1`
+
+For $i=2, A[2]=-3$:
+  `current_max = max(A[2], current_max + A[2]) = max(-3, 1 + (-3)) = max(-3, -2) = -2`
+  `max_so_far = max(max_so_far, current_max) = max(1, -2) = 1`
+
+For $i=3, A[3]=4$:
+  `current_max = max(A[3], current_max + A[3]) = max(4, -2 + 4) = max(4, 2) = 4`
+  `max_so_far = max(max_so_far, current_max) = max(1, 4) = 4`
+
+For $i=4, A[4]=-1$:
+  `current_max = max(A[4], current_max + A[4]) = max(-1, 4 + (-1)) = max(-1, 3) = 3`
+  `max_so_far = max(max_so_far, current_max) = max(4, 3) = 4`
+
+For $i=5, A[5]=2$:
+  `current_max = max(A[5], current_max + A[5]) = max(2, 3 + 2) = max(2, 5) = 5`
+  `max_so_far = max(max_so_far, current_max) = max(4, 5) = 5`
+
+For $i=6, A[6]=1$:
+  `current_max = max(A[6], current_max + A[6]) = max(1, 5 + 1) = max(1, 6) = 6`
+  `max_so_far = max(max_so_far, current_max) = max(5, 6) = 6`
+
+For $i=7, A[7]=-5$:
+  `current_max = max(A[7], current_max + A[7]) = max(-5, 6 + (-5)) = max(-5, 1) = 1`
+  `max_so_far = max(max_so_far, current_max) = max(6, 1) = 6`
+
+For $i=8, A[8]=4$:
+  `current_max = max(A[8], current_max + A[8]) = max(4, 1 + 4) = max(4, 5) = 5`
+  `max_so_far = max(max_so_far, current_max) = max(6, 5) = 6`
+
+Step 3: The final value of `max_so_far` is the maximum subarray sum.
+Maximum Subarray Sum = $6$.
+
+
