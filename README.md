@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Exam Paper Generator
 
-## Getting Started
+A multi-agent system that drafts a full exam paper from a topic, a mark budget and a difficulty level, then waits for a professor to approve it or send it back with feedback.
 
-First, run the development server:
+## How it works
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```mermaid
+flowchart LR
+    S([Professor input]) --> I[Split marks]
+    I --> A[Agent A<br/>concepts]
+    I --> B[Agent B<br/>programming]
+    I --> C[Agent C<br/>maths]
+    A --> E[Editor agent]
+    B --> E
+    C --> E
+    E --> H{Professor review}
+    H -- approve --> D([Final paper])
+    H -- feedback --> R[Feedback router]
+    R -. redo only the affected section .-> A
+    R -.-> B
+    R -.-> C
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Split marks.** The total marks are divided across three specialist agents according to the chosen distribution.
+2. **Draft in parallel.** Each agent (Gemini 2.5 Flash) researches its topic with Tavily search and writes questions with answer keys, sized exactly to its mark budget.
+3. **Edit.** An editor agent merges the three sections into one consistent paper.
+4. **Human review.** The professor sees the draft and either approves it or writes feedback.
+5. **Targeted redo.** A feedback-router agent reads the feedback and sends it only to the agent(s) whose section needs changing, so the rest of the paper is kept.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Every draft and every round of feedback is stored, so a professor can see how the paper evolved.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Stack
 
-## Learn More
+Next.js 16 (App Router) · TypeScript · LangGraph · Gemini 2.5 Flash · Tavily · NextAuth · Prisma · SQLite · Framer Motion
 
-To learn more about Next.js, take a look at the following resources:
+## Run locally
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+git clone https://github.com/Rashi18032006/Exam_Paper-generator.git
+cd Exam_Paper-generator
+npm install
+cp .env.example .env    # then fill in the keys
+npx prisma db push      # creates the SQLite tables
+npx tsx prisma/seed.ts  # creates a demo professor account
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open http://localhost:3000.
 
-## Deploy on Vercel
+### Environment variables
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Variable | What it is |
+|---|---|
+| `GOOGLE_API_KEY` | Gemini API key (Google AI Studio) |
+| `TAVILY_API_KEY` | Tavily search key |
+| `NEXTAUTH_SECRET` | Any long random string (`openssl rand -base64 32`) |
+| `NEXTAUTH_URL` | `http://localhost:3000` locally |
+| `DATABASE_URL` | `file:./dev.db` for SQLite |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project layout
+
+```
+src/
+  lib/agent/examGraph.ts   LangGraph workflow (agents, editor, router, review)
+  lib/agent/tools.ts       Tavily search and mark splitting
+  app/api/exam/            generate, approve, reject, details routes
+  app/exam/                new-exam form and review screen
+prisma/schema.prisma       User, ExamSession, ExamDraft
+```
+
+## What I learned
+
+- Designing a LangGraph with parallel branches, a join and a conditional loop back.
+- Keeping LLM output to a strict JSON shape, and fixing the marks when the model miscounts.
+- Putting a human approval step inside an agent loop instead of after it.
