@@ -2,6 +2,8 @@
 
 A multi-agent system that drafts a full exam paper from a topic, a mark budget and a difficulty level, then waits for a professor to approve it or send it back with feedback.
 
+**Live demo:** [exam-paper-generator-eight.vercel.app](https://exam-paper-generator-eight.vercel.app)
+
 ## How it works
 
 ```mermaid
